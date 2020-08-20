@@ -80,6 +80,5 @@ while running:
                     exit()
                 else:
                     print("Sorry, wrong password!")
-                    print(mycursor)
             else: 
                 print("Sorry, no such username!")
