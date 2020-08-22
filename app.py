@@ -1,9 +1,11 @@
 import mysql.connector
+from pyfiglet import Figlet
 
 database_connection = False
 running = True
 pass_weak = False
 login_status = False
+login_said = False
 
 def database_connect(host_v,usr,password,datab):
     global database_connection, db, mycursor
@@ -31,7 +33,9 @@ def setup_database_connection():
     if database_connection == False:
         exit() 
 
-print("Welcome to Login System v1.2!")
+f = Figlet(font='slant')
+print(f.renderText('Login System'))
+print("Welcome to Login System v1.3 by debugleader!")
 print("")
 while running:
     if not database_connection:
@@ -50,20 +54,22 @@ while running:
     elif user_input == str(1):
         try:
             mycursor.execute("CREATE TABLE system_data (name VARCHAR(20), password VARCHAR(20), personID int PRIMARY KEY AUTO_INCREMENT)")
+            print("Table created!")      
         except: 
             print("Table already created or something else went wrong!")
     elif user_input == str(2):
         register_name = input("Input your name: ")
         while not pass_weak:
             register_passwd = input("Input your password: ")
-            if len(register_passwd) > 8:
+            if (any(x.isupper() for x in register_passwd) and any(x.islower() for x in register_passwd) and any(x.isdigit() for x in register_passwd) and len(register_passwd) >= 8):
                 mycursor.execute(f"INSERT INTO system_data (name,password) VALUES ('{register_name}','{register_passwd}')")
                 db.commit()
                 pass_weak = True
                 print("")
                 print(f"Congratulations! Your name is {register_name} and your password is {register_passwd}!")
             else:
-                print("Weak password, please type more than 8 characters!")
+                print("Weak password, the password should contain at least an upper case letter, a lower case letter, a number and must be longer than 7 characters!")
+        pass_weak = False
     elif user_input == str(3):
 
         mycursor.execute("SELECT * FROM system_data")
@@ -73,12 +79,21 @@ while running:
         while not login_status:
             login_name = input("Input your name: ")
             login_passwd = input("Input your password: ")
-            if login_name == x[0]:
-                if login_passwd == x[1]:
-                    print("")
-                    print("You successfully logged in, thank you really much for using our system :)")
-                    exit()
-                else:
-                    print("Sorry, wrong password!")
-            else: 
-                print("Sorry, no such username!")
+            for counter in range(len(credentials)):
+                if login_name == credentials[counter][0]:
+                    if login_passwd == credentials[counter][1]:
+                        print("")
+                        print("You successfully logged in, thank you really much for using our system :)")
+                        print("")
+                        print(f'The account name is called "{credentials[counter][0]}" and the password is "{credentials[counter][1]}"')
+                        print(f"This account was the number {credentials[counter][2]} registered account!")
+                        print("")
+                        exit()
+                    else:
+                        if login_said == False:
+                            print("Sorry, wrong username or password!")
+                            login_said = True
+                elif login_said == False:
+                            print("Sorry, wrong username or password!")
+                            login_said = True
+            login_said = False
