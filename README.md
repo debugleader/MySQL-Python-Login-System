@@ -5,3 +5,9 @@
 * Improved user experience 
 * Added extra password security
 * Added a figlet art
+
+---
+
+> [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://debugleader.github.io)
+
+---
